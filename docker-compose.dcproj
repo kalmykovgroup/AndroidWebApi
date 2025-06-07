@@ -10,6 +10,7 @@
     <None Remove="Новая папка\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".editorconfig" />
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
     <None Include="nginx.conf" />
