@@ -1,0 +1,15 @@
+﻿services:
+  api:
+    image: api:latest
+    build:
+      context: .
+      dockerfile: Api/Dockerfile
+    ports:
+      - "443:5001"  # Хост 443 → Контейнер 5001 (HTTPS)
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:5001
+    volumes:
+      # Используем локальные сертификаты (например, dev)
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    restart: unless-stopped
