@@ -44,9 +44,8 @@ public class ProductController : ControllerBase
     public async Task<ActionResult> Delete(Guid id)
     {
         var success = await _mediator.Send(new DeleteProductCommand(id));
-        if (!success)
-            return NotFound();
-
-        return NoContent();
+      
+       return Ok(success);
+         
     }
 }
