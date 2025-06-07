@@ -4,12 +4,22 @@
     build:
       context: .
       dockerfile: Api/Dockerfile
-    ports:
-      - "443:5001"  # Хост 443 → Контейнер 5001 (HTTPS)
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=https://+:5001
+      - ASPNETCORE_URLS=http://+:5000  # api слушает HTTP
+    expose:
+      - "5000"  # nginx будет проксировать сюда
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
     volumes:
-      # Используем локальные сертификаты (например, dev)
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs/cert.pem:/etc/ssl/certs/cert.pem:ro
+      - ./certs/privkey.pem:/etc/ssl/private/privkey.pem:ro
+    depends_on:
+      - api
     restart: unless-stopped
