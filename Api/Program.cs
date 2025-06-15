@@ -45,6 +45,7 @@ namespace Api
                 app.UseSwaggerUI();
             }
 
+            builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
 
             // ВАЖНО! Подключаем CORS перед MapControllers
             app.UseCors("AllowAll");
