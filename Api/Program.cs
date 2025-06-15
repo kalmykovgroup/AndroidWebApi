@@ -45,8 +45,11 @@ namespace Api
                 app.UseSwaggerUI();
             }
 
+
             // ВАЖНО! Подключаем CORS перед MapControllers
             app.UseCors("AllowAll");
+
+            app.UseStaticFiles();
 
             app.MapControllers();
 
