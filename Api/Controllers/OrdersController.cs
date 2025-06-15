@@ -1,4 +1,5 @@
 ﻿using Api.Contracts.Commands;
+using Api.Contracts.Commands.Orders;
 using Api.Contracts.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +18,14 @@ namespace Api.Controllers
         public async Task<IActionResult> GetAll()
         {
             var result = await _mediator.Send(new GetAllOrdersQuery());
-            return Ok(result);
+            return result.Success ? Ok(result) : StatusCode(500, result);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateOrderCommand command)
+        [HttpPut("{id:guid}/status")]
+        public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] string status)
         {
-            var created = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetAll), new { id = created.Id }, created);
+            var result = await _mediator.Send(new UpdateOrderStatusCommand(id, status));
+            return result.Success ? Ok(result) : BadRequest(result);
         }
     }
 }
