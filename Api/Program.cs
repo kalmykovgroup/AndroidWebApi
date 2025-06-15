@@ -31,6 +31,8 @@ namespace Api
             // Репозиторий
             builder.Services.AddSingleton<IProductRepository, ProductRepository>();
 
+            builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
+
             // MediatR
             builder.Services.AddMediatR(cfg =>
             {
@@ -45,7 +47,6 @@ namespace Api
                 app.UseSwaggerUI();
             }
 
-            builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
 
             // ВАЖНО! Подключаем CORS перед MapControllers
             app.UseCors("AllowAll");

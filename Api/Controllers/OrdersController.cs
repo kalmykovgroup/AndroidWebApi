@@ -14,7 +14,7 @@ namespace Api.Controllers
 
         public OrdersController(IMediator mediator) => _mediator = mediator;
 
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
             var result = await _mediator.Send(new GetAllOrdersQuery());
