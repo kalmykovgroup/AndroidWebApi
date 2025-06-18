@@ -28,21 +28,7 @@ namespace Api.Repositories
 
 
 
-        public ProductRepository()
-        {
-            
-            for (int i = 1; i <= 100; i++)
-            {
-                _products.Add(new ProductDto
-                {
-                    Id = Guid.NewGuid(),
-                    Name = $"Product {i}",
-                    Price = 10m * i, // например, 10, 20, 30 и т.п.
-                    Description = $"Description for Product {i}"
-                });
-            }
-        }
-
+         
         public Task<List<ProductDto>> GetAllAsync()
         {
             return Task.FromResult(_products.ToList());
