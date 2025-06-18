@@ -1,5 +1,6 @@
 ﻿using Api.Contracts.Commands;
 using Api.Contracts.Commands.Orders;
+using Api.Contracts.Dtos;
 using Api.Contracts.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -22,9 +23,9 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id:guid}/status")]
-        public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] string status)
+        public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateOrderStatusRequest request)
         {
-            var result = await _mediator.Send(new UpdateOrderStatusCommand(id, status));
+            var result = await _mediator.Send(new UpdateOrderStatusCommand(id, request.Status));
             return result.Success ? Ok(result) : BadRequest(result);
         }
     }
