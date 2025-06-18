@@ -12,7 +12,7 @@ namespace Api.Repositories
             _orders.Add(new Order
             {
                 CustomerName = "Иван Иванов",
-                Status = OrderStatus.Pending,
+                Status = OrderStatus.NEW,
                 Items = new List<OrderItem>
                 {
                     new() { ProductName = "Ноутбук", Quantity = 1, UnitPrice = 75000 },

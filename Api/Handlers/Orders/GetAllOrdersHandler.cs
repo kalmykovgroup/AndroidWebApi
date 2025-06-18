@@ -21,7 +21,7 @@ namespace Api.Handlers.Orders
                 Id = o.Id,
                 CreatedAt = o.CreatedAt,
                 CustomerName = o.CustomerName,
-                Status = o.Status.ToString(),
+                Status = o.Status,
                 TotalAmount = o.TotalAmount,
                 Items = o.Items.Select(i => new OrderItemDto
                 {
