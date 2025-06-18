@@ -1,5 +1,7 @@
 ﻿using Api.Contracts;
+using Api.Contracts.Commands;
 using Api.Contracts.Commands.Orders;
+using Api.Contracts.Dtos;
 using Api.Contracts.Queries;
 using Api.Interfaces;
 using Api.Models;
@@ -8,26 +10,44 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Handlers.Orders
 {
-    [ApiController]
-    [Route("api/orders")]
-    public class OrdersController : ControllerBase
+    public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, ApiResponse<ProductDto>>
     {
-        private readonly IMediator _mediator;
+        private readonly IProductRepository _repository;
 
-        public OrdersController(IMediator mediator) => _mediator = mediator;
-
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public UpdateProductCommandHandler(IProductRepository repository)
         {
-            var result = await _mediator.Send(new GetAllOrdersQuery());
-            return result.Success ? Ok(result) : StatusCode(500, result);
+            _repository = repository;
         }
 
-        [HttpPut("{id:guid}/status")]
-        public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] string status)
+        public async Task<ApiResponse<ProductDto>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new UpdateOrderStatusCommand(id, status));
-            return result.Success ? Ok(result) : BadRequest(result);
+            var existingProduct = await _repository.GetByIdAsync(request.ProductDto.Id);
+
+            if (existingProduct == null)
+            {
+                return ApiResponse<ProductDto>.Fail("Продукт не найден");
+            }
+
+            // Обновляем поля
+            existingProduct.Name = request.ProductDto.Name;
+            existingProduct.Description = request.ProductDto.Description;
+            existingProduct.Price = request.ProductDto.Price;
+            existingProduct.ImageUrl = request.ProductDto.ImageUrl;
+
+            await _repository.UpdateAsync(existingProduct);
+
+            // Собираем обратно DTO
+            var updatedDto = new ProductDto
+            {
+                Id = existingProduct.Id,
+                Name = existingProduct.Name,
+                Description = existingProduct.Description,
+                Price = existingProduct.Price,
+                ImageUrl = existingProduct.ImageUrl
+            };
+
+            return ApiResponse<ProductDto>.Ok(updatedDto);
         }
     }
+
 }

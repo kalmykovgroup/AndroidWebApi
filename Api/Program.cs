@@ -1,7 +1,8 @@
 
-using System.Reflection;
 using Api.Interfaces;
 using Api.Repositories;
+using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace Api
 {
@@ -11,7 +12,10 @@ namespace Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            }); 
 
             // Swagger
             builder.Services.AddEndpointsApiExplorer();
