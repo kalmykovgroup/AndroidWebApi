@@ -10,43 +10,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Handlers.Orders
 {
-    public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, ApiResponse<ProductDto>>
+    public class UpdateOrderStatusCommandHandler
+        : IRequestHandler<UpdateOrderStatusCommand, ApiResponse<bool>>
     {
-        private readonly IProductRepository _repository;
+        private readonly IOrderRepository _repository;
 
-        public UpdateProductCommandHandler(IProductRepository repository)
+        public UpdateOrderStatusCommandHandler(IOrderRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<ApiResponse<ProductDto>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<bool>> Handle(UpdateOrderStatusCommand request, CancellationToken cancellationToken)
         {
-            var existingProduct = await _repository.GetByIdAsync(request.ProductDto.Id);
+            var order = await _repository.GetByIdAsync(request.OrderId);
 
-            if (existingProduct == null)
-            {
-                return ApiResponse<ProductDto>.Fail("Продукт не найден");
-            }
+            if (order == null)
+                return ApiResponse<bool>.Fail("Order not found");
 
-            // Обновляем поля
-            existingProduct.Name = request.ProductDto.Name;
-            existingProduct.Description = request.ProductDto.Description;
-            existingProduct.Price = request.ProductDto.Price;
-            existingProduct.ImageUrl = request.ProductDto.ImageUrl;
+            order.Status = Enum.Parse<OrderStatus>(request.Status);
+            await _repository.UpdateAsync(order);
 
-            await _repository.UpdateAsync(existingProduct);
-
-            // Собираем обратно DTO
-            var updatedDto = new ProductDto
-            {
-                Id = existingProduct.Id,
-                Name = existingProduct.Name,
-                Description = existingProduct.Description,
-                Price = existingProduct.Price,
-                ImageUrl = existingProduct.ImageUrl
-            };
-
-            return ApiResponse<ProductDto>.Ok(updatedDto);
+            return ApiResponse<bool>.Ok(true);
         }
     }
 
