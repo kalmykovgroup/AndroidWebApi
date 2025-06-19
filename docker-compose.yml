@@ -2,6 +2,7 @@
   api:
     image: api:latest
     container_name: api_test_android
+    user: "0:0"
     build:
       context: .
       dockerfile: Api/Dockerfile
