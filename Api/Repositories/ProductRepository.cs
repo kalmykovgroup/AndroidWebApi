@@ -47,17 +47,16 @@ namespace Api.Repositories
             return Task.FromResult(product);
         }
 
-        public Task<bool> UpdateAsync(ProductDto product)
+        public Task<ProductDto> UpdateAsync(ProductDto product)
         {
             var existing = _products.FirstOrDefault(p => p.Id == product.Id);
-            if (existing == null)
-                return Task.FromResult(false);
+          
 
             existing.Name = product.Name;
             existing.Price = product.Price;
             existing.Description = product.Description;
 
-            return Task.FromResult(true);
+            return Task.FromResult(existing);
         }
 
         public Task<bool> DeleteAsync(Guid id)
