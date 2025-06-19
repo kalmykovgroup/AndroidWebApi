@@ -49,12 +49,25 @@ namespace Api.Repositories
 
         public Task<ProductDto> UpdateAsync(ProductDto product)
         {
-            var index = _products.FindIndex(p => p.Id == product.Id);
-            if (index >= 0)
+            Console.Write("Start update...");
+
+            for (int i = 0; i < _products.Count; i++)
             {
-                _products[index] = product; // Полная замена объекта в списке
+                if (product.Id == _products[i].Id)
+                {
+                    Console.Write("Updated!!!");
+                    _products[i].Name = product.Name;
+                    _products[i].Price = product.Price;
+                    _products[i].Description = product.Description;
+                    _products[i].ImageUrl = product.ImageUrl;
+                    return Task.FromResult(_products[i]);
+                }
             }
+
+            Console.Write("failure updated");
+
             return Task.FromResult(product);
+
         }
 
 
