@@ -10,6 +10,8 @@
       - ASPNETCORE_URLS=http://+:5000
     expose:
       - "5000"
+    volumes:
+      - product_images:/app/wwwroot/product
     restart: unless-stopped
 
   nginx:
