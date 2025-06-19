@@ -22,7 +22,8 @@ namespace Api.Handlers
             {
                 Name = request.ProductDto.Name,
                 Price = request.ProductDto.Price,
-                Description = request.ProductDto.Description
+                Description = request.ProductDto.Description,
+                ImageUrl = request.ProductDto.ImageUrl
             };
             var result = await _repository.AddAsync(product);
 
