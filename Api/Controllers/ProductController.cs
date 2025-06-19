@@ -1,3 +1,4 @@
+using Api.Contracts;
 using Api.Contracts.Commands;
 using Api.Contracts.Dtos;
 using Api.Contracts.Queries;
@@ -56,7 +57,8 @@ public class ProductController : ControllerBase
         }
 
         // Возвращаем относительный путь
-        return Ok(new { imageUrl = $"product/{fileName}" });
+        return Ok(ApiResponse<ImageUploadResponse>.Ok(new ImageUploadResponse { ImageUrl = $"product/{fileName}" }));
+         
     }
 
 
