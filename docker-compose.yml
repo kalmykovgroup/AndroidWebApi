@@ -28,3 +28,5 @@
     depends_on:
     - api
     restart: unless-stopped
+volumes:
+  product_images:
