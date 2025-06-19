@@ -50,14 +50,17 @@ namespace Api.Repositories
         public Task<ProductDto> UpdateAsync(ProductDto product)
         {
             var existing = _products.FirstOrDefault(p => p.Id == product.Id);
-          
+            if (existing == null)
+                return Task.FromResult<ProductDto>(null);
 
             existing.Name = product.Name;
             existing.Price = product.Price;
             existing.Description = product.Description;
+            existing.ImageUrl = product.ImageUrl;   
 
             return Task.FromResult(existing);
         }
+
 
         public Task<bool> DeleteAsync(Guid id)
         {
