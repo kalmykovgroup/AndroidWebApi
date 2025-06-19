@@ -39,6 +39,26 @@ public class ProductController : ControllerBase
         return Ok(updated);
     }
 
+    [HttpPost("upload")]
+    public async Task<IActionResult> UploadImage(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest("No file uploaded");
+
+        var fileName = $"{Guid.NewGuid()}_{file.FileName}";
+        var filePath = Path.Combine("wwwroot", "product", fileName);
+
+        Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        // Возвращаем относительный путь
+        return Ok(new { imageUrl = $"product/{fileName}" });
+    }
+
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)
