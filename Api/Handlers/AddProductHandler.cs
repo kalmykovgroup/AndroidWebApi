@@ -2,6 +2,7 @@
 using Api.Contracts.Commands;
 using Api.Contracts.Dtos;
 using Api.Interfaces;
+using Api.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -27,7 +28,16 @@ namespace Api.Handlers
             };
             var result = await _repository.AddAsync(product);
 
-            return ApiResponse<ProductDto>.Ok(result);
+            var dto = new ProductDto
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Description = product.Description,
+                ImageUrl = product.ImageUrl
+            };
+
+            return ApiResponse<ProductDto>.Ok(dto);
         }
     }
 }
